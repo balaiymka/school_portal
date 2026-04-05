@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сабақ кестесі - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+    /* Бұрынғы стильдер өлік қалады */
+
+    /* ===== МОБИЛЬДІ НҰСҚАСЫ ===== */
+    @media (max-width: 768px) {
+        .schedule-card {
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .schedule-header {
+            margin-bottom: 20px;
+        }
+
+        .schedule-header h2 {
+            font-size: 20px;
+            gap: 8px;
+        }
+
+        .schedule-header p {
+            font-size: 12px;
+        }
+
+        .day-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .day-btn {
+            min-width: auto;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .schedule-table {
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .schedule-table th {
+            padding: 10px 8px;
+            font-size: 11px;
+        }
+
+        .schedule-table td {
+            padding: 10px 8px;
+            font-size: 12px;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #fcfdfe;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .schedule-card {
+            padding: 12px;
+        }
+
+        .schedule-header h2 {
+            font-size: 18px;
+        }
+
+        .schedule-header p {
+            font-size: 11px;
+        }
+
+        .day-selector {
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .day-btn {
+            padding: 8px;
+            font-size: 11px;
+        }
+
+        .day-btn.active,
+        .day-btn:hover {
+            background: #3c82d0;
+        }
+
+        .schedule-table {
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            padding: 8px 5px;
+        }
+
+        .schedule-table th {
+            font-size: 10px;
+        }
+
+        .schedule-table td {
+            font-size: 11px;
+        }
+    }
+</style>
+</head>
+<body class="bg-light">
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img"> <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="#" onclick="goToPage('profile.html')">Жеке кабинет</a>
+    <button class="btn-login-nav" id="mainLoginBtn" onclick="openLogin()">Кіру</button>
+</nav>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="schedule-card">
+            <div class="schedule-header">
+                <h2><i class="fa-solid fa-calendar-days"></i> Апталық сабақ кестесі</h2>
+                <p>11 "А" сыныбы | 2025-2026 оқу жылы</p>
+         </div>
+
+            <div class="day-selector">
+                <button class="day-btn active" onclick="showDay('mon')">Дүйсенбі</button>
+                <button class="day-btn" onclick="showDay('tue')">Сейсенбі</button>
+                <button class="day-btn" onclick="showDay('wed')">Сәрсенбі</button>
+                <button class="day-btn" onclick="showDay('thu')">Бейсенбі</button>
+                <button class="day-btn" onclick="showDay('fri')">Жұма</button>
+            </div>
+
+            <div class="schedule-content">
+                <div id="mon" class="day-content active">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr><th>№</th><th>Уақыты</th><th>Пән</th><th>Мұғалім</th><th>Каб.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>08:30 - 09:15</td><td>Алгебра</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>2</td><td>09:25 - 10:10</td><td>Алгебра</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>3</td><td>10:30 - 11:15</td><td>Физика</td><td>Б. Искаков</td><td>212</td></tr>
+                            <tr><td>4</td><td>11:25 - 12:10</td><td>Қазақ тілі</td><td>А. Төлеубекова</td><td>105</td></tr>
+                            <tr><td>5</td><td>12:20 - 13:05</td><td>Тарих</td><td>К. Болатов</td><td>208</td></tr>
+                            <tr><td>6</td><td>13:15 - 14:00</td><td>Ағылшын тілі</td><td>М. Грей</td><td>301</td></tr>
+                            <tr><td>7</td><td>14:10 - 14:55</td><td>География</td><td>С. Мұрат</td><td>203</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="tue" class="day-content">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr><th>№</th><th>Уақыты</th><th>Пән</th><th>Мұғалім</th><th>Каб.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>08:30 - 09:15</td><td>Химия</td><td>Ж. Омарова</td><td>401</td></tr>
+                            <tr><td>2</td><td>09:25 - 10:10</td><td>Геометрия</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>3</td><td>10:30 - 11:15</td><td>Биология</td><td>Р. Ахметова</td><td>215</td></tr>
+                            <tr><td>4</td><td>11:25 - 12:10</td><td>Қазақ әдебиеті</td><td>А. Төлеубекова</td><td>105</td></tr>
+                            <tr><td>5</td><td>12:20 - 13:05</td><td>Орыс тілі</td><td>Е. Петрова</td><td>308</td></tr>
+                            <tr><td>6</td><td>13:15 - 14:00</td><td>Дене шынықтыру</td><td>С. Қанат</td><td>Зал</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="wed" class="day-content">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr><th>№</th><th>Уақыты</th><th>Пән</th><th>Мұғалім</th><th>Каб.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>08:30 - 09:15</td><td>Информатика</td><td>Д. Оспанов</td><td>102</td></tr>
+                            <tr><td>2</td><td>09:25 - 10:10</td><td>Физика</td><td>Б. Искаков</td><td>212</td></tr>
+                            <tr><td>3</td><td>10:30 - 11:15</td><td>Алгебра</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>4</td><td>11:25 - 12:10</td><td>Дүниежүзі тарихы</td><td>К. Болатов</td><td>208</td></tr>
+                            <tr><td>5</td><td>12:20 - 13:05</td><td>Ағылшын тілі</td><td>М. Грей</td><td>301</td></tr>
+                            <tr><td>6</td><td>13:15 - 14:00</td><td>Қазақ тілі</td><td>А. Төлеубекова</td><td>105</td></tr>
+                            <tr><td>7</td><td>14:10 - 14:55</td><td>Сынып сағаты</td><td>А. Смаилова</td><td>304</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="thu" class="day-content">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr><th>№</th><th>Уақыты</th><th>Пән</th><th>Мұғалім</th><th>Каб.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>08:30 - 09:15</td><td>Биология</td><td>Р. Ахметова</td><td>215</td></tr>
+                            <tr><td>2</td><td>09:25 - 10:10</td><td>Химия</td><td>Ж. Омарова</td><td>401</td></tr>
+                            <tr><td>3</td><td>10:30 - 11:15</td><td>Геометрия</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>4</td><td>11:25 - 12:10</td><td>Құқық негіздері</td><td>К. Болатов</td><td>208</td></tr>
+                            <tr><td>5</td><td>12:20 - 13:05</td><td>Дене шынықтыру</td><td>С. Қанат</td><td>Зал</td></tr>
+                            <tr><td>6</td><td>13:15 - 14:00</td><td>География</td><td>С. Мұрат</td><td>203</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="fri" class="day-content">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr><th>№</th><th>Уақыты</th><th>Пән</th><th>Мұғалім</th><th>Каб.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>08:30 - 09:15</td><td>Қазақ тілі</td><td>А. Төлеубекова</td><td>105</td></tr>
+                            <tr><td>2</td><td>09:25 - 10:10</td><td>Алгебра</td><td>А. Смаилова</td><td>304</td></tr>
+                            <tr><td>3</td><td>10:30 - 11:15</td><td>Физика</td><td>Б. Искаков</td><td>212</td></tr>
+                            <tr><td>4</td><td>11:25 - 12:10</td><td>Көркем еңбек</td><td>Ж. Сапар</td><td>101</td></tr>
+                            <tr><td>5</td><td>12:20 - 13:05</td><td>Өзін-өзі тану</td><td>Л. Нұртас</td><td>103</td></tr>
+                            <tr><td>6</td><td>13:15 - 14:00</td><td>Орыс тілі</td><td>Е. Петрова</td><td>308</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Баға қою - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .teacher-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .teacher-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .teacher-header h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .teacher-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item strong {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .info-item span {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .grade-form {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            color: #1a2a44;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #3498db;
+            background: #f9fbff;
+        }
+
+        .subject-display {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+
+        .subject-display i {
+            font-size: 18px;
+        }
+
+        .students-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .students-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a2a44;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table thead tr {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .students-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #7f8c8d;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .students-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .students-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #1a2a44;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .grade-input-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .grade-input-cell input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+        }
+
+        .grade-input-cell input:focus {
+            border-color: #3498db;
+        }
+
+        .grade-input-cell input:valid {
+            border-color: #27ae60;
+        }
+
+        /* ===== БАҒА ХАБАРЛАМАСЫ ===== */
+        .grade-hint {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-weight: 600;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+        }
+
+        .btn-save-grade {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-save-grade:hover {
+            background: #229954;
+        }
+
+        .btn-save-grade:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-saved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #2980b9;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left-color: #f5c6cb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left-color: #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .teacher-container {
+                padding: 0 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .students-table th,
+            .students-table td {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .grade-input-cell input {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/45'">
+                <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="profile.html">Жеке кабинет</a>
+                <button class="btn-login-nav" id="logout-btn" onclick="logout()">Шығу</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="teacher-container">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i> Артқа
+        </button>
+
+        <!-- ХЕДЕР -->
+        <div class="teacher-header">
+            <h1><i class="fas fa-book-open"></i> Баға қою</h1>
+            <div class="teacher-info">
+                <div class="info-item">
+                    <strong>Ұстаз:</strong>
+                    <span id="teacher-name">Айгүл Төле��бекова</span>
+                </div>
+                <div class="info-item">
+                    <strong>Пәні:</strong>
+                    <span id="teacher-subject">Қазақ тілі</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTS -->
+        <div id="error-alert" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="error-text"></span>
+        </div>
+
+        <div id="success-alert" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span id="success-text"></span>
+        </div>
+
+        <!-- ФОРМ -->
+        <div class="grade-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Күні</label>
+                    <input type="date" id="lesson-date">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-list"></i> Тоқсан</label>
+                    <select id="term-select">
+                        <option value="1">1-тоқсан</option>
+                        <option value="2">2-тоқсан</option>
+                        <option value="3">3-тоқсан</option>
+                        <option value="4">4-тоқсан</option>
+                        <option value="year">Жылдық</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-book"></i> Пәні</label>
+                    <div class="subject-display" id="subject-display">
+                        <i class="fas fa-spin fa-spinner"></i> Жүктелуде...
+                    </div>
+                </div>
+            </div>
+            <div class="grade-hint">
+                Баға 1-5 аралығында болуы тиіс (1 - ең төмен, 5 - ең жоғары)
+            </div>
+        </div>
+
+        <!-- ОҚУШЫЛАР -->
+        <div class="students-section">
+            <div class="students-header">
+                <i class="fas fa-users"></i> Оқушылар
+            </div>
+
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>Оқушының аты-жөні</th>
+                        <th>Email</th>
+                        <th style="text-align: center;">Баға (1-5)</th>
+                        <th style="text-align: center;">Әрекет</th>
+                    </tr>
+                </thead>
+                <tbody id="students-tbody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #999; padding: 30px;">
+                            <i class="fas fa-spinner fa-spin"></i> Оқушыларды жүктеуде...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let students = [];
+        let teacherSubject = '';
+
+        // МҰҒАЛІМНІҢ ПӘНІ ЖҮКТЕУ
+        async function loadTeacherSubject() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+                document.getElementById('teacher-name').innerText = currentUser.name || 'Ұстаз';
+
+                const response = await fetch('http://localhost:5001/api/teacher/subject', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) {
+                    showError('Сіз мұғалім емес немесе пәні белгіленбеген!');
+                    return;
+                }
+
+                const data = await response.json();
+                teacherSubject = data.subject;
+                
+                document.getElementById('teacher-subject').innerText = teacherSubject;
+                document.getElementById('subject-display').innerHTML = `<i class="fas fa-book"></i> ${teacherSubject}`;
+
+            } catch (err) {
+                console.error('Қате:', err);
+                showError('Пәнді жүктеу сәтсіз!');
+            }
+        }
+
+        // ОҚУШЫЛАР ЖҮКТЕУ
+        async function loadStudents() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:5001/api/students', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) throw new Error('Оқушыларды жүктеу сәтсіз');
+
+                students = await response.json() || [];
+                renderStudents();
+
+            } catch (err) {
+                console.error('Қате:', err);
+                showError('Оқушыларды жүктеу сәтсіз: ' + err.message);
+            }
+        }
+
+        // ОҚУШЫЛАР КЕСТЕСІ
+        function renderStudents() {
+            const tbody = document.getElementById('students-tbody');
+
+            if (students.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #999; padding: 30px;">
+                            <i class="fas fa-inbox"></i> Оқушылар табылмады
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = students.map((student, idx) => {
+                const firstLetter = (student.full_name || '?')[0].toUpperCase();
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="student-name">
+                                <div class="student-avatar">${firstLetter}</div>
+                                ${escapeHtml(student.full_name)}
+                            </div>
+                        </td>
+                        <td style="color: #7f8c8d; font-size: 13px;">${escapeHtml(student.email)}</td>
+                        <td>
+                            <div class="grade-input-cell">
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    max="5" 
+                                    placeholder="1-5"
+                                    id="grade-${student.id}"
+                                    data-student-id="${student.id}"
+                                    data-student-email="${student.email}"
+                                    data-student-name="${student.full_name}"
+                                >
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="btn-save-grade" onclick="saveGrade(${student.id}, '${student.email}', '${student.full_name}')">
+                                <i class="fas fa-save"></i> Сақтау
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // БАҒА САҚТАУ
+        async function saveGrade(studentId, studentEmail, studentName) {
+            const gradeInput = document.getElementById(`grade-${studentId}`);
+            const grade = gradeInput.value.trim();
+            const date = document.getElementById('lesson-date').value;
+            const term = document.getElementById('term-select').value;
+
+            // ===== БАҒА ВАЛИДАЦИЯСЫ =====
+            const gradeNum = parseInt(grade);
+
+            if (!date) {
+                showError('Күнді таңдаңыз!');
+                return;
+            }
+
+            if (!grade) {
+                showError('Баға қойыңыз!');
+                return;
+            }
+
+            if (isNaN(gradeNum) || gradeNum < 1 || gradeNum > 5) {
+                showError('Баға 1-5 аралығында болуы тиіс! (Сіз: ' + grade + ')');
+                gradeInput.focus();
+                gradeInput.style.borderColor = '#e74c3c';
+                setTimeout(() => gradeInput.style.borderColor = '', 2000);
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const btn = event.target;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Жүктелуде...';
+
+                const response = await fetch('http://localhost:5001/api/grades', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        student_email: studentEmail,
+                        subject: teacherSubject,
+                        grade: gradeNum,
+                        term: term
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Баға қою сәтсіз');
+                }
+
+                showSuccess(`${studentName} үшін ${gradeNum} баға сақталды`);
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Сақталды';
+                btn.style.background = '#27ae60';
+                gradeInput.value = '';
+
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-save"></i> Сақтау';
+                    btn.style.background = '';
+                }, 2000);
+
+            } catch (err) {
+                console.error('Қате:', err);
+                showError('Қате: ' + err.message);
+                event.target.disabled = false;
+                event.target.innerHTML = '<i class="fas fa-save"></i> Сақтау';
+            }
+        }
+
+        // ALERTS
+        function showError(msg) {
+            const alert = document.getElementById('error-alert');
+            document.getElementById('error-text').innerText = msg;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 5000);
+        }
+
+        function showSuccess(msg) {
+            const alert = document.getElementById('success-alert');
+            document.getElementById('success-text').innerText = msg;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 3000);
+        }
+
+        // HTML ЭКСКЕЙП
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str).replace(/[&<>"'`]/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#39;', '`': '&#96;'
+            })[s]);
+        }
+
+        // LOGOUT
+        function logout() {
+            if (confirm('Жүйеден шықтыңыз ба?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('lesson-date').value = today;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeacherSubject();
+            loadStudents();
+            setDefaultDate();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сарышаған мектебі - Басты бет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img"> <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="active">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="#" onclick="goToPage('profile.html')">Жеке кабинет</a>
+    <button class="btn-login-nav" id="mainLoginBtn" onclick="openLogin()">Кіру</button>
+</nav>
+        </div>
+    </header>
+
+    <!-- ЛОГИН МОДАЛІ -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Жүйеге кіру</h2>
+            <span class="close-btn" onclick="closeLogin()">&times;</span>
+        </div>
+
+        <!-- ҚАТЕ ХАБАРЛАМАСЫ -->
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Қате хабарлама</span>
+        </div>
+
+        <!-- ЛОГИН ФОРМАСЫ -->
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Email</label>
+                <input 
+                    type="email" 
+                    id="loginEmail" 
+                    placeholder="example@mail.com" 
+                    autocomplete="email"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Құпиясөз</label>
+                <input 
+                    type="password" 
+                    id="loginPassword" 
+                    placeholder="••••••••" 
+                    autocomplete="current-password"
+                    required>
+            </div>
+
+            <div class="form-options">
+                <label>
+                    <input type="checkbox"> Мені есте сақта
+                </label>
+            </div>
+
+            <button type="submit" class="btn-login-submit">
+                Кіру
+            </button>
+        </form>
+
+        <hr style="border: none; border-top: 1px solid #f0f3f5; margin: 20px 0;">
+
+        </p>
+    </div>
+</div>
+
+<!-- СТИЛЬДЕР -->
+<style>
+    /* ЛОГИН МОДАЛІ */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background-color: #ffffff;
+        margin: 5% auto;
+        padding: 40px;
+        border-radius: 20px;
+        width: 400px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { 
+            transform: translateY(-50px); 
+            opacity: 0; 
+        }
+        to { 
+            transform: translateY(0); 
+            opacity: 1; 
+        }
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #f0f3f5;
+        padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+        color: #1a2a44;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .close-btn {
+        font-size: 28px;
+        cursor: pointer;
+        color: #7f8c8d;
+        transition: 0.3s;
+    }
+
+    .close-btn:hover {
+        color: #1a2a44;
+        transform: scale(1.2);
+    }
+
+    /* ҚАТЕ ХАБАРЛАМАСЫ */
+    .error-message {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .error-message i {
+        font-size: 18px;
+    }
+
+    /* ИНПУТТАР */
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #34495e;
+        font-size: 14px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #f0f3f5;
+        border-radius: 12px;
+        outline: none;
+        transition: 0.3s;
+        font-size: 16px;
+        font-family: inherit;
+    }
+
+    .input-group input:focus {
+        border-color: #3498db;
+        background: #f9fbff;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 25px;
+        color: #7f8c8d;
+    }
+
+    .form-options label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .form-options input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+    }
+
+    /* БАТЫРМА */
+    .btn-login-submit {
+        width: 100%;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-login-submit:hover {
+        background: linear-gradient(135deg, #2980b9, #21618c);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-login-submit:active {
+        transform: translateY(0);
+    }
+
+    .btn-login-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* МОБИЛЬДІ НҰСҚАСЫ */
+    @media (max-width: 480px) {
+        .modal-content {
+            width: 90%;
+            padding: 25px;
+            margin: 30% auto;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .input-group input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .btn-login-submit {
+            padding: 12px;
+            font-size: 14px;
+        }
+    }
+</style>
+<style>
+    /* --- ЖАҢАРТЫЛҒАН МОДАЛЬДІК ТЕРЕЗЕ СТИЛЬДЕРІ --- */
+    /* Модалды терезе фоны */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 15, 30, 0.85); /* Қара-көк мөлдір фон */
+    backdrop-filter: blur(8px); /* Артқы жағын бұлдырату */
+}
+
+/* Терезенің өзі */
+.modal-content {
+    background: #ffffff;
+    margin: 8% auto;
+    padding: 35px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-title { display: flex; align-items: center; gap: 12px; color: #1a2a3a; }
+.header-title i { font-size: 24px; color: #3498db; }
+.header-title h2 { margin: 0; font-size: 24px; font-weight: 700; }
+
+.close-btn { font-size: 28px; cursor: pointer; color: #94a3b8; transition: 0.3s; }
+.close-btn:hover { color: #e74c3c; }
+
+/* Инпуттар */
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #475569; font-size: 14px; }
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i { position: absolute; left: 15px; color: #94a3b8; }
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: 0.3s;
+    outline: none;
+}
+
+.input-wrapper input:focus { border-color: #3498db; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1); }
+
+/* Опциялар */
+.form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 13px; }
+.remember-me { display: flex; align-items: center; gap: 7px; cursor: pointer; color: #64748b; }
+.forgot-pass { color: #3498db; text-decoration: none; font-weight: 600; }
+
+/* Қателік хабарламасы */
+.error-msg {
+    background: #fff1f2;
+    color: #e11d48;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: none; /* Әдепкіде көрінбейді */
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    border: 1px solid #ffe4e6;
+}
+
+/* Батырма */
+.btn-login-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.btn-login-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3); }
+</style>
+<!-- <script>
+    // --- ЖАҢАРТЫЛҒАН КІРУ МОДАЛЬДІК ТЕРЕЗЕСІН БАСҚАРУ --- 
+   document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('errorMessage');
+
+    try {
+      // index.html ішіндегі fetch бөлімін дәл осылай жаз:
+const response = await fetch('http://127.0.0.1:5000/api/login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+});
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Мәліметті сақтау
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            
+            // Сәтті кіру анимациясы (мысалы, батырманы жасыл ету)
+            e.target.querySelector('button').style.background = '#27ae60';
+            e.target.querySelector('button').innerText = 'Кіруде...';
+
+            setTimeout(() => {
+                if (data.user.role === 'teacher') window.location.href = 'mugalim.html';
+                else window.location.href = 'student.html';
+            }, 1000);
+
+        } else {
+            // Қате болса, хабарламаны көрсету
+            errorDiv.style.display = 'flex';
+            errorDiv.querySelector('span').innerText = data.error;
+        }
+    } catch (err) {
+        errorDiv.style.display = 'flex';
+        errorDiv.querySelector('span').innerText = "Сервермен байланыс жоқ!";
+    }
+});
+
+// Модалды жабу функциялары
+function openLogin() { document.getElementById('loginModal').style.display = 'block'; }
+function closeLogin() { 
+    document.getElementById('loginModal').style.display = 'none'; 
+    document.getElementById('errorMessage').style.display = 'none'; // Қатені жасыру
+}
+</script> -->
+
+    <section class="hero-banner">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1>“Сарышаған кентіндегі жалпы орта білім беретін мектеп” КММ</h1>
+            <p>Біздің мектеп - сапалы білім мен жарқын болашаққа жол ашатын заманауи білім беру орны.</p>
+            <div class="hero-actions">
+                <a href="schedule.html" class="btn-hero-blue"><i class="fa-solid fa-calendar-days"></i> Сабақ кестесі</a>
+                <a href="news.html" class="btn-hero-sky"><i class="fa-solid fa-globe"></i> Жаңалықтар</a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .hero-banner {
+            position: relative;
+            background: url('photo/image.png') no-repeat center center/cover;
+            padding: 120px 0;
+            color: white;
+        }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 31, 63, 0.75); }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-content h1 { font-size: 34px; font-weight: 700; margin-bottom: 20px; line-height: 1.3; }
+        .hero-content p { font-size: 16px; max-width: 700px; margin-bottom: 35px; opacity: 0.9; line-height: 1.6; }
+        .hero-actions { display: flex; gap: 15px; }
+        .hero-actions a { padding: 14px 28px; border-radius: 30px; color: white; font-weight: 600; font-size: 14px; }
+        .hero-actions i { margin-right: 8px; }
+        .btn-hero-blue { background: #007bff; }
+        .btn-hero-sky { background: #007bff; }
+
+        /* 3 Колонка Grid */
+        .main-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title { font-size: 22px; font-weight: 700; margin-bottom: 25px; color: var(--dark-blue); }
+
+        /* Ұстаздар кіші блогы */
+        .teacher-box-mini { display: flex; align-items: center; gap: 12px; background: #f8fbff; padding: 10px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #edf2f7; }
+        .teacher-box-mini img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .t-info-mini strong { font-size: 13px; color: var(--dark-blue); }
+        .t-info-mini small { color: var(--text-gray); font-size: 11px; }
+    </style>
+
+    <section class="container main-info-grid">
+        <div class="card">
+            <h2 class="card-title">Жаңалықтар</h2>
+            <div class="news-list-mini">
+                <div class="news-item-mini" style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <img src="photo/news.jpg" alt="" style="border-radius: 8px; float: left; margin-right: 10px; width: 100px; height: 140px; object-fit: cover;">
+                    <h3 style="font-size: 14px;">Спорттық жарыс</h3>
+                    <p style="font-size: 12px; color: gray;">20 сәуір 2025</p>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+
+            <a href="news.html" class="btn-full-blue-link">Басқа жаңалықтар</a>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Сабақ кестесі</h2>
+            <div class="schedule-mini" style="background: #f0f7ff; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <p><strong>Дүйсенбі</strong></p>
+                <p style="font-size: 14px;">08:30 - Биология</p>
+                <p style="font-size: 14px;">09:25 - Физика</p>
+            </div>
+            <button class="btn-full-blue-link" onclick="checkAuthAndGo('schedule.html')">Толығырақ...</button>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Мұғалімдер</h2>
+            <div class="teachers-list-mini">
+                <div class="teacher-box-mini">
+                    <img src="photo/apai1.png" alt="Teacher">
+                    <div class="t-info-mini"><strong>Айгүл Төлеубекова</strong><br><small>Қазақ тілі мұғалімі</small></div>
+                </div>
+                <div class="teacher-box-mini">
+                    <img src="photo/apai2.png" alt="Teacher">
+                    <div class="t-info-mini"><strong>Ержан Бекжанов</strong><br><small>Физика мұғалімі</small></div>
+                </div>
+            </div>
+            <button class="btn-full-blue-link" onclick="checkAuthAndGo('teachers.html')">Барлық мұғалімдер</button>
+        </div>
+    </section>
+
+    <section class="school-stats-section">
+    <div class="container">
+        <div class="stats-wrapper">
+            <div class="stat-item">
+                <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                <div class="stat-number" data-target="850">850+</div>
+                <p>Бақытты оқушы</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="fas fa-award"></i></div>
+                <div class="stat-number" data-target="45">45+</div>
+                <p>Алтын белгі иегерлері</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <div class="stat-number" data-target="60">60+</div>
+                <p>Білікті ұстаздар</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-number" data-target="120">120+</div>
+                <p>Жарыс жеңімпаздары</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="ai-chat-launcher" onclick="toggleAIChat()">
+    <i class="fas fa-robot"></i>
+    <span class="notification-badge">1</span>
+</div>
+
+<div id="ai-chat-container" class="chat-hidden">
+    <div class="chat-header">
+        <div class="header-info">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div>
+                <h4>Saryshagan AI</h4>
+                <p><span class="online-dot"></span> Онлайн</p>
+            </div>
+        </div>
+        <button class="close-chat" onclick="toggleAIChat()">&times;</button>
+    </div>
+    
+    <div id="chat-body" class="chat-body">
+        <div class="message bot-msg">
+            Сәлем! Мен Saryshagan мектебінің цифрлық көмекшісімін. Саған немен көмектесе аламын?
+        </div>
+    </div>
+
+    <div class="chat-footer">
+        <input type="text" id="ai-chat-input" placeholder="Сұрақ қойыңыз..." onkeypress="handleChatKey(event)">
+        <button onclick="sendAiMessage()" id="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="container footer-content">
+        <div class="footer-section about">
+            <h3 class="footer-logo">Сарышаған мектебі</h3>
+            <p>Білім нәрімен сусындатып, болашаққа жол ашатын білім ордасы. Сапалы білім мен саналы тәрбие — біздің басты мақсатымыз.</p>
+        </div>
+
+        <div id="ai-chat-toggle" onclick="toggleChat()">
+</div>
+
+    <div class="footer-section links">
+            <h4>Пайдалы сілтемелер</h4>
+            <ul>
+                <li><a href="index.html">Басты бет</a></li>
+                <li><a href="schedule.html">Сабақ кестесі</a></li>
+                <li><a href="teachers.html">Ұстаздар ұжымы</a></li>
+                <li><a href="news.html">Жаңалықтар</a></li>
+            </ul>
+        </div>
+        <div class="footer-section contact">
+            <h4>Байланыс</h4>
+            <p><i class="fas fa-phone"></i> +7 (771) 528 46 65</p>
+            <p><i class="fas fa-envelope"></i> bilim@mail.ru</p>
+            <p><i class="fas fa-location-dot"></i> Қарағанды облысы, Сарышаған кенті</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Сарышаған жалпы білім беретін мектебі. Барлық құқықтар қорғалған.</p>
+    </div>
+</footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

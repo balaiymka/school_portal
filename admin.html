@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Админ Панелі - Мектеп</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+            color: #2c3e50;
+        }
+
+        .admin-page {
+            background-color: #f0f2f5;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .admin-sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, #1a2a44, #2c3e50);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .admin-sidebar h3 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-nav {
+            flex-grow: 1;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #a0aec0;
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(60, 130, 208, 0.2);
+            color: white;
+            border-left-color: #3c82d0;
+        }
+
+        .nav-link i {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .btn-logout {
+            margin-top: auto;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .admin-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .content-header h1 {
+            font-size: 24px;
+            color: #1a2a44;
+            margin: 0;
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f0f7ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .admin-user-info span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3c82d0;
+        }
+
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3c82d0;
+        }
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-box.blue {
+            background: linear-gradient(135deg, #3c82d0, #2a6bb3);
+        }
+
+        .stat-box.orange {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .stat-box.green {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .stat-box i {
+            font-size: 30px;
+            opacity: 0.7;
+        }
+
+        .stat-box h4 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .stat-box p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* ===== КАРТОЧКАЛАР ===== */
+        .admin-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a2a44;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ===== ФОРМА ===== */
+        .admin-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #3c82d0;
+            box-shadow: 0 0 0 3px rgba(60, 130, 208, 0.1);
+            background: #f9fbff;
+        }
+
+        .btn-add-user {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-add-user:hover {
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-add-user:active {
+            transform: translateY(0);
+        }
+
+        /* ===== КЕСТЕ ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #f0f2f5;
+            color: #718096;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            background: #f9fbff;
+        }
+
+        .user-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+        }
+
+        .user-table tr:hover {
+            background-color: #f9fbff;
+        }
+
+        .role-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-transform: capitalize;
+            font-weight: 600;
+        }
+
+        .role-badge.admin {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .role-badge.teacher {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .role-badge.student {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #3c82d0;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            color: #2a5fa3;
+            transform: scale(1.1);
+        }
+
+        .action-btn.delete:hover {
+            color: #e74c3c;
+        }
+
+        /* ===== ХАБАРЛАМА ===== */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* ===== SEARCH & FILTER ===== */
+        .search-filter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9fbff;
+            border-radius: 12px;
+        }
+
+        /* ===== CHECKBOX LABEL ===== */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .checkbox-label:hover {
+            background: #f8f9fa;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label span {
+            color: #1a2a44;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn-save {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background: #229954;
+        }
+
+        /* ===== МОБИЛЬДІ НҰСҚАСЫ ===== */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                padding: 15px;
+                align-items: center;
+                justify-content: space-between;
+                position: static;
+            }
+
+            .admin-logo {
+                width: 50px;
+                height: 50px;
+                margin: 0 10px 0 0;
+            }
+
+            .admin-sidebar h3 {
+                margin: 0;
+                font-size: 14px;
+            }
+
+            .admin-nav {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin: 0 auto;
+                flex-grow: 0;
+            }
+
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 12px;
+                margin: 0;
+                flex: 1;
+                min-width: 80px;
+            }
+
+            .btn-logout {
+                width: auto;
+                padding: 8px 15px;
+                font-size: 12px;
+                margin: 0;
+            }
+
+            .admin-content {
+                padding: 15px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .content-header h1 {
+                font-size: 20px;
+            }
+
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .user-table {
+                font-size: 12px;
+            }
+
+            .user-table th,
+            .user-table td {
+                padding: 8px;
+            }
+
+            .search-filter {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-sidebar {
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+
+            .admin-logo {
+                width: 40px;
+                height: 40px;
+                margin: 0 8px 0 0;
+            }
+
+            .admin-sidebar h3 {
+                font-size: 12px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .admin-nav {
+                gap: 5px;
+            }
+
+            .admin-content {
+                padding: 10px;
+            }
+
+            .content-header {
+                padding: 15px;
+            }
+
+            .stat-box {
+                padding: 15px;
+            }
+
+            .stat-box h4 {
+                font-size: 18px;
+            }
+
+            .admin-card {
+                padding: 15px;
+            }
+
+            .user-table th,
+            .user-table td {
+                padding: 6px 4px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body class="admin-page">
+
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3>Админ Панелі</h3>
+
+            <nav class="admin-nav">
+                <a href="#" class="nav-link active" onclick="showSection('dashboard', event)">
+                    <i class="fas fa-chart-line"></i> Басты бет
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('users', event)">
+                    <i class="fas fa-users"></i> Пайдаланушылар
+                </a>
+            </nav>
+
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Шығу
+            </button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-content">
+            <div class="content-header">
+                <h1 id="admin-welcome">Қайырлы күн, админ!</h1>
+                <div class="admin-user-info">
+                    <span id="admin-display-name">Әкімші</span>
+                    <img src="photo/ava.png" alt="Admin" class="avatar-sm" onerror="this.src='https://via.placeholder.com/40'">
+                </div>
+            </div>
+
+            <!-- ===== DASHBOARD ===== -->
+            <div id="dashboard-section">
+                <div class="stats-row">
+                    <div class="stat-box blue">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h4 id="total-users">0</h4>
+                            <p>Барлық пайдаланушылар</p>
+                        </div>
+                    </div>
+                    <div class="stat-box orange">
+                        <i class="fas fa-chalkboard-user"></i>
+                        <div>
+                            <h4 id="total-teachers">0</h4>
+                            <p>Мұғалімдер</p>
+                        </div>
+                    </div>
+                    <div class="stat-box green">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div>
+                            <h4 id="total-students">0</h4>
+                            <p>Оқушылар</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== USERS ===== -->
+            <div id="users-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-user-plus"></i> Жаңа пайдаланушы қосу
+                    </div>
+
+                    <div id="alert-message"></div>
+
+                    <form id="addUserForm" class="admin-form">
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="userEmail" placeholder="example@mail.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Пароль *</label>
+                            <input type="password" id="userPassword" placeholder="••••••••" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Аты-жөні *</label>
+                            <input type="text" id="userFullName" placeholder="Аты Сөйлемі" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Рөлі *</label>
+                            <select id="userRole" onchange="updateUserFormFields()" required>
+                                <option value="">Таңдаңыз</option>
+                                <option value="student">Оқушы</option>
+                                <option value="teacher">Мұғалім</option>
+                                <option value="admin">Админ</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="class-field" style="display: none;">
+                            <label>Сынып</label>
+                            <input type="text" id="userClass" placeholder="11 А">
+                        </div>
+
+                        <div class="form-group" id="subject-field" style="display: none;">
+                            <label>Пәні</label>
+                            <input type="text" id="userSubject" placeholder="Математика">
+                        </div>
+
+                        <button type="submit" class="btn-add-user">
+                            <i class="fas fa-plus"></i> Пайдаланушы қосу
+                        </button>
+                    </form>
+                </div>
+
+                <!-- SEARCH & FILTER -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-search"></i> Іздеу және Фильтрлеу
+                    </div>
+
+                    <div class="search-filter">
+                        <div class="form-group">
+                            <label><i class="fas fa-search"></i> Іздеу</label>
+                            <input type="text" id="search-input" placeholder="Email немесе аты..." onkeyup="filterUsers()">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-filter"></i> Рөлі</label>
+                            <select id="filter-role" onchange="filterUsers()">
+                                <option value="">Барлығы</option>
+                                <option value="student">Оқушылар</option>
+                                <option value="teacher">Мұғалімдер</option>
+                                <option value="admin">Админдер</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-sort"></i> Сортировка</label>
+                            <select id="sort-by" onchange="filterUsers()">
+                                <option value="name">Есімі бойынша</option>
+                                <option value="email">Email бойынша</option>
+                                <option value="role">Рөлі бойынша</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- USERS TABLE -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-list"></i> Пайдаланушылар тізімі
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Email</th>
+                                    <th>Аты-жөні</th>
+                                    <th>Рөлі</th>
+                                    <th>Сынып/Пәні</th>
+                                    <th>Әрекеттер</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 20px;">
+                                        <i class="fas fa-spinner fa-spin"></i> Жүктелуде...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SETTINGS ===== -->
+            <div id="settings-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-school"></i> Мектептің ақпараты
+                    </div>
+                    <div class="admin-form">
+                        <div class="form-group">
+                            <label>Мектептің атауы</label>
+                            <input type="text" id="school-name" value="Сарышаған мектебі">
+                        </div>
+                        <div class="form-group">
+                            <label>Директор</label>
+                            <input type="text" id="director-name" placeholder="Директордың аты">
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <input type="tel" id="school-phone" placeholder="+7 (7xx) xxx-xx-xx">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="school-email" placeholder="school@example.com">
+                        </div>
+                    </div>
+                    <button class="btn-save" onclick="saveSchoolInfo()">
+                        <i class="fas fa-save"></i> Са��тау
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-book"></i> Академиялық жүйе
+                    </div>
+                    <div class="admin-form">
+                        <div class="form-group">
+                            <label>Баға ауқымы (мин)</label>
+                            <input type="number" id="min-grade" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Баға ауқымы (макс)</label>
+                            <input type="number" id="max-grade" value="5" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Оқу жылы басталуы</label>
+                            <input type="date" id="school-year-start" value="2025-09-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Оқу жылы аяқталуы</label>
+                            <input type="date" id="school-year-end" value="2026-06-30">
+                        </div>
+                    </div>
+                    <button class="btn-save" onclick="saveAcademicInfo()">
+                        <i class="fas fa-save"></i> Сақтау
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-bell"></i> Уведомления параметрлері
+                    </div>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="notify-grades" checked>
+                        <span>Бағалар туралы хабарлау</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="notify-homework" checked>
+                        <span>Үйтапсырма туралы хабарлау</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="notify-attendance" checked>
+                        <span>Қатысу туралы хабарлау</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="notify-journal" checked>
+                        <span>Журнал жазбалары туралы хабарлау</span>
+                    </label>
+                    <button class="btn-save" onclick="saveNotificationSettings()">
+                        <i class="fas fa-save"></i> Сақтау
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-info-circle"></i> Жүйе Мәліметі
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 11px; text-transform: uppercase;">Версия</strong>
+                            <div style="color: #1a2a44; font-weight: 700; margin-top: 8px; font-size: 16px;">1.0.0</div>
+                        </div>
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 11px; text-transform: uppercase;">Жүйе</strong>
+                            <div style="color: #1a2a44; font-weight: 700; margin-top: 8px; font-size: 16px;">School Portal</div>
+                        </div>
+                        <div>
+                            <strong style="color: #7f8c8d; font-size: 11px; text-transform: uppercase;">Күні</strong>
+                            <div style="color: #1a2a44; font-weight: 700; margin-top: 8px; font-size: 16px;" id="system-date">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let allUsers = [];
+
+        // ===== БАСТАПҚЫ ОРНАТУ =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('authToken');
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+            if (!token || user.role !== 'admin') {
+                alert('Рұқсат жоқ! Админ болу қажет.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('admin-display-name').innerText = user.name || 'Әкімші';
+            document.getElementById('admin-welcome').innerText = `Қайырлы күн, ${user.name}!`;
+            document.getElementById('system-date').innerText = new Date().toLocaleString('kk-KZ');
+            
+            await loadUsers();
+            await loadStats();
+            loadSettings();
+        });
+
+        // ===== БӨЛІМдерді көрсету =====
+        function showSection(section, event) {
+            event.preventDefault();
+            
+            const sections = ['dashboard-section', 'users-section', 'settings-section'];
+            sections.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.style.display = 'none';
+            });
+
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-section').style.display = 'block';
+            } else if (section === 'users') {
+                document.getElementById('users-section').style.display = 'block';
+            } else if (section === 'settings') {
+                document.getElementById('settings-section').style.display = 'block';
+            }
+
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.closest('.nav-link')?.classList.add('active');
+        }
+
+        // ===== ПАЙДАЛАНУШЫ ФОРМАСЫ =====
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value.trim();
+            const full_name = document.getElementById('userFullName').value.trim();
+            const role = document.getElementById('userRole').value;
+            const class_name = document.getElementById('userClass').value.trim() || null;
+            const subject = document.getElementById('userSubject').value.trim() || null;
+
+            if (!email || !password || !full_name || !role) {
+                showAlert('Барлық міндетті өрістерді толтырыңыз', 'error');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:5001/api/admin/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ email, password, full_name, role, class_name, subject })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert('' + (data.error || 'Қате орын алды'), 'error');
+                    return;
+                }
+
+                showAlert('Пайдаланушы сәтті қосылды!', 'success');
+                document.getElementById('addUserForm').reset();
+                await loadUsers();
+                await loadStats();
+            } catch (err) {
+                console.error('Қате:', err);
+                showAlert('Сервермен байланыс орнатылмады', 'error');
+            }
+        });
+
+        // ===== ПАЙДАЛАНУШЫЛАР ЖҮКТЕУ =====
+        async function loadUsers() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:5001/api/admin/users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Пайдаланушыларды жүктеу сәтсіз');
+                }
+
+                allUsers = await response.json();
+                filterUsers();
+            } catch (err) {
+                console.error('Жүктеу қатесі:', err);
+                showAlert('' + err.message, 'error');
+            }
+        }
+
+        // ===== ІЗДЕУ ЖӘНЕ СОРТИРОВКА =====
+        function filterUsers() {
+            const searchText = document.getElementById('search-input').value.toLowerCase();
+            const roleFilter = document.getElementById('filter-role').value;
+            const sortBy = document.getElementById('sort-by').value;
+
+            let filtered = allUsers.filter(user => {
+                const matchSearch = user.email.toLowerCase().includes(searchText) || 
+                                   user.full_name.toLowerCase().includes(searchText);
+                const matchRole = !roleFilter || user.role === roleFilter;
+                return matchSearch && matchRole;
+            });
+
+            filtered.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.full_name.localeCompare(b.full_name);
+                    case 'email':
+                        return a.email.localeCompare(b.email);
+                    case 'role':
+                        return a.role.localeCompare(b.role);
+                    default:
+                        return 0;
+                }
+            });
+
+            renderUsers(filtered);
+        }
+
+        // ===== ПАЙДАЛАНУШЫЛАРДЫ КӨРСЕТУ =====
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Пайдаланушылар табылмады</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map((user, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${user.email}</td>
+                    <td>${user.full_name}</td>
+                    <td>
+                        <span class="role-badge ${user.role}">
+                            ${user.role === 'teacher' ? 'Мұғалім' : user.role === 'admin' ? 'Админ' : 'Оқушы'}
+                        </span>
+                    </td>
+                    <td>${user.subject || user.class_name || '-'}</td>
+                    <td>
+                        <button class="action-btn delete" onclick="deleteUser(${user.id}, event)" title="Өшіру">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== СТАТИСТИКА ЖҮКТЕУ =====
+        async function loadStats() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:5001/api/admin/users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Статистика жүктелмеді');
+
+                const users = await response.json();
+                document.getElementById('total-users').innerText = users.length;
+                document.getElementById('total-teachers').innerText = users.filter(u => u.role === 'teacher').length;
+                document.getElementById('total-students').innerText = users.filter(u => u.role === 'student').length;
+            } catch (err) {
+                console.error('Статистика қатесі:', err);
+            }
+        }
+
+        // ===== ПАЙДАЛАНУШЫНЫ ӨШІРУ =====
+        async function deleteUser(id, event) {
+            event.preventDefault();
+
+            if (!confirm('Бұл пайдаланушыны өшіргіңіз келеді ме?')) return;
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`http://localhost:5001/api/admin/users/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert(data.error || 'Өшіру сәтсіз', 'error');
+                    return;
+                }
+
+                showAlert('Пайдаланушы өшірілді', 'success');
+                await loadUsers();
+                await loadStats();
+            } catch (err) {
+                showAlert('Өшіру сәтсіз', 'error');
+            }
+        }
+
+        // ===== ФОРМА ӨРІСТЕРІН ОНДАТУ =====
+        function updateUserFormFields() {
+            const role = document.getElementById('userRole').value;
+            document.getElementById('class-field').style.display = role === 'student' ? 'flex' : 'none';
+            document.getElementById('subject-field').style.display = role === 'teacher' ? 'flex' : 'none';
+        }
+
+        // ===== ПАРАМЕТРЛЕР =====
+        function saveSchoolInfo() {
+            const data = {
+                name: document.getElementById('school-name').value,
+                director: document.getElementById('director-name').value,
+                phone: document.getElementById('school-phone').value,
+                email: document.getElementById('school-email').value
+            };
+            localStorage.setItem('schoolInfo', JSON.stringify(data));
+            showAlert('Сақталды', 'success');
+        }
+
+        function saveAcademicInfo() {
+            const data = {
+                minGrade: document.getElementById('min-grade').value,
+                maxGrade: document.getElementById('max-grade').value,
+                yearStart: document.getElementById('school-year-start').value,
+                yearEnd: document.getElementById('school-year-end').value
+            };
+            localStorage.setItem('academicInfo', JSON.stringify(data));
+            showAlert('Сақталды', 'success');
+        }
+
+        function saveNotificationSettings() {
+            const data = {
+                grades: document.getElementById('notify-grades').checked,
+                homework: document.getElementById('notify-homework').checked,
+                attendance: document.getElementById('notify-attendance').checked,
+                journal: document.getElementById('notify-journal').checked
+            };
+            localStorage.setItem('notificationSettings', JSON.stringify(data));
+            showAlert('Сақталды', 'success');
+        }
+
+        function loadSettings() {
+            const school = JSON.parse(localStorage.getItem('schoolInfo') || '{}');
+            if (school.name) document.getElementById('school-name').value = school.name;
+            if (school.director) document.getElementById('director-name').value = school.director;
+            if (school.phone) document.getElementById('school-phone').value = school.phone;
+            if (school.email) document.getElementById('school-email').value = school.email;
+        }
+
+        // ===== ALERTS =====
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert-message');
+            alert.className = `alert ${type}`;
+            alert.innerText = message;
+            alert.style.display = 'block';
+
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 4000);
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            if (!confirm('Жүйеден шықтыңыз ба?')) return;
+            
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

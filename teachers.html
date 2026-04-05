@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ұстаздар ұжымы - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+    /* Бұрынғы стильдер өлік қалады */
+
+    /* ===== МОБИЛЬДІ НҰСҚАСЫ ===== */
+    @media (max-width: 768px) {
+        .teachers-grid-full {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .teacher-card-full {
+            min-height: 320px;
+            padding: 20px;
+        }
+
+        .teacher-card-full img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 12px;
+        }
+
+        .teacher-card-full h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .teacher-card-full p {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .teacher-subject {
+            font-size: 11px;
+            padding: 4px 12px;
+        }
+
+        .teacher-contact {
+            gap: 10px;
+        }
+
+        .section-header h1 {
+            font-size: 22px;
+        }
+
+        .section-header p {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .teachers-grid-full {
+            gap: 15px;
+        }
+
+        .teacher-card-full {
+            min-height: 300px;
+            padding: 15px;
+        }
+
+        .teacher-card-full img {
+            width: 90px;
+            height: 90px;
+        }
+
+        .teacher-card-full h3 {
+            font-size: 14px;
+        }
+
+        .teacher-card-full p {
+            font-size: 11px;
+        }
+
+        .teacher-subject {
+            font-size: 10px;
+            padding: 3px 10px;
+        }
+
+        .teacher-contact {
+            gap: 8px;
+        }
+
+        .teacher-contact a {
+            font-size: 18px;
+        }
+
+        .section-header h1 {
+            font-size: 20px;
+        }
+
+        .section-header p {
+            font-size: 12px;
+        }
+    }
+</style>
+</head>
+<body class="bg-light">
+
+  <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img"> <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="#" onclick="goToPage('profile.html')">Жеке кабинет</a>
+    <button class="btn-login-nav" id="mainLoginBtn" onclick="openLogin()">Кіру</button>
+</nav>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="section-header text-center mb-5">
+            <h1 style="color: #001f3f; font-weight: 700; margin-bottom: 15px;">Біздің ұстаздар ұжымы</h1>
+            <p style="color: #7f8c8d; max-width: 600px; margin: 10 auto; text-align: left;">Сарышаған мектебінің білікті мамандары мен өз ісінің шеберлері. Барлығы 30-дан астам кәсіби маман.</p>
+        </div>
+
+        <div id="teachers-grid" class="teachers-grid-full">
+            </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

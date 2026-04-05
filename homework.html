@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Үй тапсырмасы - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .homework-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .homework-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .homework-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .homework-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .homework-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+        }
+
+        .stat-box.due {
+            border-left-color: #e67e22;
+        }
+
+        .stat-box.completed {
+            border-left-color: #27ae60;
+        }
+
+        .stat-box h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #1a2a44;
+            font-weight: 700;
+        }
+
+        .stat-box p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.3s;
+            color: #7f8c8d;
+        }
+
+        .filter-btn:hover {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .filter-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .homework-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .homework-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .homework-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .homework-card-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .homework-card-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .homework-card-header .subject {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .homework-card-body {
+            padding: 15px;
+            flex: 1;
+        }
+
+        .homework-description {
+            color: #2c3e50;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .homework-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .meta-item i {
+            width: 20px;
+            text-align: center;
+            color: #3498db;
+        }
+
+        .due-date {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .due-date.overdue {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .due-date.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .homework-footer {
+            padding: 15px;
+            border-top: 1px solid #f0f2f5;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-mark {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: 0.3s;
+            color: #7f8c8d;
+        }
+
+        .btn-mark:hover {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+
+        .btn-mark.completed {
+            background: #d4edda;
+            color: #155724;
+            border-color: #27ae60;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            color: #2c3e50;
+            margin: 15px 0 5px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #2980b9;
+        }
+
+        /* МОБИЛЬДІ */
+        @media (max-width: 768px) {
+            .homework-container {
+                padding: 0 12px;
+                margin: 15px auto;
+            }
+
+            .homework-header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .homework-header h1 {
+                font-size: 20px;
+            }
+
+            .homework-list {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .homework-card-header {
+                padding: 12px;
+            }
+
+            .homework-card-body {
+                padding: 12px;
+            }
+
+            .filter-tabs {
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .filter-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/45'">
+                <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="profile.html">Жеке кабинет</a>
+                <button class="btn-login-nav" id="logout-btn" onclick="logout()">Шығу</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="homework-container">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i> Артқа
+        </button>
+
+        <div class="homework-header">
+            <h1><i class="fas fa-book"></i> Үй тапсырмалары</h1>
+            <p>Барлық үй тапсырмаларын бір жерде көріңіз</p>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="homework-stats">
+            <div class="stat-box">
+                <h3 id="total-homework">0</h3>
+                <p>Барлығы</p>
+            </div>
+            <div class="stat-box due">
+                <h3 id="due-homework">0</h3>
+                <p>Орындау қажет</p>
+            </div>
+            <div class="stat-box completed">
+                <h3 id="completed-homework">0</h3>
+                <p>Орындалған</p>
+            </div>
+        </div>
+
+        <!-- ФИЛЬТР -->
+        <div class="filter-tabs">
+            <button class="filter-btn active" onclick="filterHomework('all')">
+                <i class="fas fa-list"></i> Барлығы
+            </button>
+            <button class="filter-btn" onclick="filterHomework('due')">
+                <i class="fas fa-hourglass-end"></i> Орындау қажет
+            </button>
+            <button class="filter-btn" onclick="filterHomework('completed')">
+                <i class="fas fa-check-circle"></i> Орындалған
+            </button>
+        </div>
+
+        <!-- ТАПСЫРМАЛАР ТІЗІМІ -->
+        <div id="homework-list" class="homework-list">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h3>Жүктелуде...</h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let allHomework = [];
+        let completedHomework = new Set(JSON.parse(localStorage.getItem('completedHomework') || '[]'));
+        let currentFilter = 'all';
+
+        // ҮЙТАПСЫРМАЛАРДЫ ЖҮКТЕУ
+        async function loadHomework() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+                if (!token || !currentUser.email) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5001/api/homework', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Үй тапсырмаларды жүктеу сәтсіз');
+                }
+
+                allHomework = await response.json() || [];
+                console.log('Үй тапсырмалар жүктелді:', allHomework);
+
+                updateStats();
+                renderHomework();
+
+            } catch (err) {
+                console.error('Қате:', err);
+                document.getElementById('homework-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Үйтапсырмаларды жүктеу сәтсіз</h3>
+                        <p>${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // СТАТИСТИКА ЖАҢАРТУ
+        function updateStats() {
+            const total = allHomework.length;
+            const due = allHomework.filter(h => !completedHomework.has(h.id)).length;
+            const completed = allHomework.filter(h => completedHomework.has(h.id)).length;
+
+            document.getElementById('total-homework').innerText = total;
+            document.getElementById('due-homework').innerText = due;
+            document.getElementById('completed-homework').innerText = completed;
+        }
+
+        // АРНАЛАЙТУ
+        function renderHomework() {
+            let filtered = allHomework;
+
+            if (currentFilter === 'due') {
+                filtered = allHomework.filter(h => !completedHomework.has(h.id));
+            } else if (currentFilter === 'completed') {
+                filtered = allHomework.filter(h => completedHomework.has(h.id));
+            }
+
+            const container = document.getElementById('homework-list');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Үйтапсырмалар табылмады</h3>
+                        <p>${currentFilter === 'due' ? 'Барлық тапсырмалар орындалды!' : 'Тапсырмалар бөлінбеген'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(h => {
+                const isCompleted = completedHomework.has(h.id);
+                const dueDate = new Date(h.due_date);
+                const today = new Date();
+                const isOverdue = dueDate < today && !isCompleted;
+
+                let dueDateClass = '';
+                let dueDateText = '';
+
+                if (isCompleted) {
+                    dueDateClass = 'completed';
+                    dueDateText = 'Орындалды';
+                } else if (isOverdue) {
+                    dueDateClass = 'overdue';
+                    dueDateText = `${dueDate.toLocaleDateString('kk-KZ')} - КЕШІКТІП ҚАЛДЫ`;
+                } else {
+                    dueDateClass = '';
+                    dueDateText = `${dueDate.toLocaleDateString('kk-KZ')} дейін`;
+                }
+
+                return `
+                    <div class="homework-card">
+                        <div class="homework-card-header">
+                            <div>
+                                <h3>${escapeHtml(h.title)}</h3>
+                            </div>
+                        </div>
+
+                        <div class="homework-card-body">
+                            <p class="homework-description">
+                                ${escapeHtml(h.description || 'Сипаттамасы жоқ')}
+                            </p>
+
+                            <div class="homework-meta">
+                                <div class="due-date ${dueDateClass}">
+                                    ${dueDateText}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="homework-footer">
+                            <button class="btn-mark ${isCompleted ? 'completed' : ''}" onclick="toggleComplete(${h.id})">
+                                <i class="fas fa-${isCompleted ? 'undo' : 'check'}"></i>
+                                ${isCompleted ? 'Орындалмады деп белгіле' : 'Орындалды деп белгіле'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // АЯҚТАЛҒАН-АЯҚТАЛМАҒАН АУЫСТЫРУ
+        function toggleComplete(homeworkId) {
+            if (completedHomework.has(homeworkId)) {
+                completedHomework.delete(homeworkId);
+            } else {
+                completedHomework.add(homeworkId);
+            }
+
+            localStorage.setItem('completedHomework', JSON.stringify(Array.from(completedHomework)));
+            updateStats();
+            renderHomework();
+        }
+
+        // ФИЛЬТРЛЕУ
+        function filterHomework(type) {
+            currentFilter = type;
+
+            // Батырмаларды активтеу
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.filter-btn').classList.add('active');
+
+            renderHomework();
+        }
+
+        // HTML ЭКСКЕЙП
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str).replace(/[&<>"'`]/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#39;', '`': '&#96;'
+            })[s]);
+        }
+
+        // LOGOUT
+        function logout() {
+            if (confirm('Жүйеден шықтыңыз ба?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', loadHomework);
+    </script>
+</body>
+</html>

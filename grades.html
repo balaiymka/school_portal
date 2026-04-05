@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бағалар - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .header-info h1 {
+            margin: 0 0 5px;
+            color: #1a2a44;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-info p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ===== TERM SELECTOR ===== */
+        .term-selector {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .term-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.3s;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .term-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .term-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* ===== TERM CONTAINER ===== */
+        .term-container {
+            display: none;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .term-container.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .term-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .term-title-section h2 {
+            margin: 0;
+            color: #1a2a44;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .avg-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .term-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .subjects-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .subjects-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #7f8c8d;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .subjects-table tbody tr {
+            border-bottom: 1px solid #f0f2f5;
+            transition: 0.3s;
+            padding: 15px 0;
+        }
+
+        .subjects-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .subjects-table td {
+            padding: 20px 15px;
+        }
+
+        .subject-col {
+            font-weight: 700;
+            color: #1a2a44;
+            font-size: 14px;
+        }
+
+        .grade-col {
+            text-align: center;
+        }
+
+        .grade-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .grade-5 {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .grade-4 {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+
+        .grade-3 {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+        }
+
+        .grade-2 {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .comment-col {
+            color: #7f8c8d;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .comment-excellent {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .comment-good {
+            color: #17a2b8;
+            font-weight: 600;
+        }
+
+        .comment-normal {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .comment-low {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .daily-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .daily-section h3 {
+            margin: 0 0 20px;
+            color: #1a2a44;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-input-wrapper {
+            margin-bottom: 15px;
+        }
+
+        .date-input-wrapper label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .date-input-wrapper input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .date-input-wrapper input:focus {
+            border-color: #667eea;
+            background: #f9fbff;
+        }
+
+        .daily-grades-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .daily-grade-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .daily-grade-subject {
+            font-weight: 600;
+            color: #1a2a44;
+            font-size: 14px;
+        }
+
+        .daily-grade-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #27ae60, #229954);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .no-daily-grades {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+        .no-daily-grades i {
+            font-size: 28px;
+            margin-bottom: 10px;
+            opacity: 0.2;
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 1024px) {
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .header-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .term-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+
+            .header-info h1 {
+                font-size: 20px;
+            }
+
+            .header-avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .term-selector {
+                padding: 15px;
+                gap: 8px;
+            }
+
+            .term-btn {
+                padding: 10px 16px;
+                font-size: 11px;
+            }
+
+            .term-container {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .subjects-table th,
+            .subjects-table td {
+                padding: 12px 8px;
+            }
+
+            .subject-col {
+                font-size: 12px;
+            }
+
+            .grade-badge {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .daily-section {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .header-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .header-info h1 {
+                font-size: 18px;
+            }
+
+            .header-stats {
+                gap: 15px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+            
+    .term-selector {
+        display: flex;
+        gap: 10px;        /* ← 20px орнына 10px */
+        padding: 15px;
+        background: white;
+        border-radius: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .term-btn {
+        padding: 8px 12px;
+        font-size: 10px;
+    }
+
+            .term-title-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .subjects-table {
+                font-size: 12px;
+            }
+
+            .subjects-table th,
+            .subjects-table td {
+                padding: 10px 6px;
+            }
+
+            .grade-badge {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .comment-col {
+                font-size: 11px;
+            }
+
+            .term-content {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i> Артқа қайту
+        </button>
+
+        <div class="page-header">
+            <div class="header-left">
+                <div class="header-avatar" id="avatar">Б</div>
+                <div class="header-info">
+                    <h1 id="student-name">Балайым Жамауқұл</h1>
+                    <p id="student-class">11 "А" сынып</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat">
+                    <div class="stat-value" id="avg-all">4.5</div>
+                    <div class="stat-label">Жалпы орташа</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="top-grade">5</div>
+                    <div class="stat-label">Ең жоғары</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="subject-count">8</div>
+                    <div class="stat-label">Пәндер</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERM SELECTOR -->
+        <div class="term-selector">
+            <button class="term-btn active" onclick="switchTerm(event, '1')">1-тоқсан</button>
+            <button class="term-btn" onclick="switchTerm(event, '2')">2-тоқсан</button>
+            <button class="term-btn" onclick="switchTerm(event, '3')">3-тоқсан</button>
+            <button class="term-btn" onclick="switchTerm(event, '4')">4-тоқсан</button>
+            <button class="term-btn" onclick="switchTerm(event, 'year')">Жылдық</button>
+        </div>
+
+        <!-- TERM 1 -->
+        <div class="term-container active" id="term-1">
+            <div class="term-title-section">
+                <h2>1-тоқсан</h2>
+                <span class="avg-display" id="avg-1">-</span>
+            </div>
+            <div class="term-content">
+                <div>
+                    <table class="subjects-table" id="table-1">
+                        <thead>
+                            <tr>
+                                <th>ПӘН</th>
+                                <th style="text-align: center;">БАҒА</th>
+                                <th style="text-align: center;">БАҒАЛАУ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-1">
+                            <tr><td colspan="3" style="text-align: center; padding: 40px 0; color: #999;"><i class="fas fa-spinner fa-spin"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="daily-section">
+                    <h3><i class="fas fa-calendar-day"></i> Күнделік бағалар</h3>
+                    <div class="date-input-wrapper">
+                        <label>Күнді таңдаңыз</label>
+                        <input type="date" class="daily-date-input" data-term="1" onchange="updateDailyGrades(this.value, '1')">
+                    </div>
+                    <div class="daily-grades-list" id="daily-1">
+                        <div class="no-daily-grades">
+                            <i class="fas fa-inbox"></i>
+                            <p>Бағалар табылмады</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERM 2 -->
+        <div class="term-container" id="term-2">
+            <div class="term-title-section">
+                <h2>2-тоқсан</h2>
+                <span class="avg-display" id="avg-2">-</span>
+            </div>
+            <div class="term-content">
+                <div>
+                    <table class="subjects-table" id="table-2">
+                        <thead>
+                            <tr>
+                                <th>ПӘН</th>
+                                <th style="text-align: center;">БАҒА</th>
+                                <th style="text-align: center;">БАҒАЛАУ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-2">
+                            <tr><td colspan="3" class="empty-state"><i class="fas fa-inbox"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="daily-section">
+                    <h3><i class="fas fa-calendar-day"></i> Күнделік бағалар</h3>
+                    <div class="date-input-wrapper">
+                        <label>Күнді таңдаңыз</label>
+                        <input type="date" class="daily-date-input" data-term="2" onchange="updateDailyGrades(this.value, '2')">
+                    </div>
+                    <div class="daily-grades-list" id="daily-2">
+                        <div class="no-daily-grades">
+                            <i class="fas fa-inbox"></i>
+                            <p>Бағалар табылмады</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERM 3 -->
+        <div class="term-container" id="term-3">
+            <div class="term-title-section">
+                <h2>3-тоқсан</h2>
+                <span class="avg-display" id="avg-3">-</span>
+            </div>
+            <div class="term-content">
+                <div>
+                    <table class="subjects-table" id="table-3">
+                        <thead>
+                            <tr>
+                                <th>ПӘН</th>
+                                <th style="text-align: center;">БАҒА</th>
+                                <th style="text-align: center;">БАҒАЛАУ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-3">
+                            <tr><td colspan="3" class="empty-state"><i class="fas fa-inbox"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="daily-section">
+                    <h3><i class="fas fa-calendar-day"></i> Күнделік бағалар</h3>
+                    <div class="date-input-wrapper">
+                        <label>Күнд�� таңдаңыз</label>
+                        <input type="date" class="daily-date-input" data-term="3" onchange="updateDailyGrades(this.value, '3')">
+                    </div>
+                    <div class="daily-grades-list" id="daily-3">
+                        <div class="no-daily-grades">
+                            <i class="fas fa-inbox"></i>
+                            <p>Бағалар табылмады</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERM 4 -->
+        <div class="term-container" id="term-4">
+            <div class="term-title-section">
+                <h2>4-тоқсан</h2>
+                <span class="avg-display" id="avg-4">-</span>
+            </div>
+            <div class="term-content">
+                <div>
+                    <table class="subjects-table" id="table-4">
+                        <thead>
+                            <tr>
+                                <th>ПӘН</th>
+                                <th style="text-align: center;">БАҒА</th>
+                                <th style="text-align: center;">БАҒАЛАУ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-4">
+                            <tr><td colspan="3" class="empty-state"><i class="fas fa-inbox"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="daily-section">
+                    <h3><i class="fas fa-calendar-day"></i> Күнделік бағалар</h3>
+                    <div class="date-input-wrapper">
+                        <label>Күнді таңдаңыз</label>
+                        <input type="date" class="daily-date-input" data-term="4" onchange="updateDailyGrades(this.value, '4')">
+                    </div>
+                    <div class="daily-grades-list" id="daily-4">
+                        <div class="no-daily-grades">
+                            <i class="fas fa-inbox"></i>
+                            <p>Бағалар табылмады</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERM YEAR -->
+        <div class="term-container" id="term-year">
+            <div class="term-title-section">
+                <h2>Жылдық</h2>
+                <span class="avg-display" id="avg-year">-</span>
+            </div>
+            <div class="term-content">
+                <div>
+                    <table class="subjects-table" id="table-year">
+                        <thead>
+                            <tr>
+                                <th>ПӘН</th>
+                                <th style="text-align: center;">БАҒА</th>
+                                <th style="text-align: center;">БАҒАЛАУ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-year">
+                            <tr><td colspan="3" class="empty-state"><i class="fas fa-inbox"></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="daily-section">
+                    <h3><i class="fas fa-calendar-day"></i> Күнделік бағалар</h3>
+                    <div class="date-input-wrapper">
+                        <label>Күнді таңдаңыз</label>
+                        <input type="date" class="daily-date-input" data-term="year" onchange="updateDailyGrades(this.value, 'year')">
+                    </div>
+                    <div class="daily-grades-list" id="daily-year">
+                        <div class="no-daily-grades">
+                            <i class="fas fa-inbox"></i>
+                            <p>Бағалар табылмады</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let allGrades = [];
+        const terms = ['1', '2', '3', '4', 'year'];
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('.daily-date-input').forEach(input => {
+                input.value = today;
+            });
+        }
+
+        async function loadGrades() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+                console.log('Ағымдағы пайдаланушы:', currentUser);
+
+                if (!token || !currentUser.email) {
+                    console.error('Авторизациялау жоқ');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const firstName = (currentUser.name || '?')[0].toUpperCase();
+                document.getElementById('avatar').innerText = firstName;
+                document.getElementById('student-name').innerText = currentUser.name || 'Оқушы';
+                document.getElementById('student-class').innerText = currentUser.class_name || '?';
+
+                console.log('Бағаларды жүктеуде...');
+
+                const response = await fetch('http://localhost:5001/api/grades');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const all = await response.json();
+                console.log('Барлық бағалар:', all);
+
+                allGrades = all.filter(g => g.student_email === currentUser.email);
+                console.log(`${currentUser.name} үшін табылды:`, allGrades.length, 'баға');
+
+                setTodayDate();
+                renderGrades();
+                updateStats();
+
+            } catch (err) {
+                console.error('ҚАТЕ:', err);
+            }
+        }
+
+        function renderGrades() {
+            terms.forEach(term => {
+                const termGrades = allGrades.filter(g => (g.term || 'year') === term);
+                const tbody = document.getElementById(`tbody-${term}`);
+
+                if (termGrades.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-state" style="padding: 40px 0;"><i class="fas fa-inbox"></i><p>Бағалар жоқ</p></td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = termGrades.map(g => {
+                    const grade = parseInt(g.grade);
+                    let gradeClass = `grade-${Math.floor(grade)}`;
+                    let comment = '';
+
+                    if (grade >= 5) {
+                        comment = '<span class="comment-excellent">Жарайсын!</span>';
+                    } else if (grade >= 4) {
+                        comment = '<span class="comment-good">Жақсы</span>';
+                    } else if (grade >= 3) {
+                        comment = '<span class="comment-normal">Қанағаттанарлық</span>';
+                    } else {
+                        comment = '<span class="comment-low">Нашар</span>';
+                    }
+
+                    return `
+                        <tr>
+                            <td class="subject-col">${escapeHtml(g.subject)}</td>
+                            <td class="grade-col">
+                                <span class="grade-badge ${gradeClass}">
+                                    ${escapeHtml(g.grade)}
+                                </span>
+                            </td>
+                            <td class="comment-col">${comment}</td>
+                        </tr>
+                    `;
+                }).join('');
+            });
+        }
+
+        function updateDailyGrades(dateStr, term) {
+            const container = document.getElementById(`daily-${term}`);
+            const dailyGrades = allGrades.filter(g => {
+                if (!g.created_at) return false;
+                const gradeDate = g.created_at.split('T')[0];
+                return gradeDate === dateStr && (g.term || 'year') === term;
+            });
+
+            if (dailyGrades.length === 0) {
+                container.innerHTML = `
+                    <div class="no-daily-grades">
+                        <i class="fas fa-inbox"></i>
+                        <p>Бұл күнде баға табылмады</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = dailyGrades.map(g => {
+                const grade = parseInt(g.grade);
+                let gradeColor = grade >= 5 ? '#27ae60' : grade >= 4 ? '#17a2b8' : '#f39c12';
+
+                return `
+                    <div class="daily-grade-item">
+                        <span class="daily-grade-subject">${escapeHtml(g.subject)}</span>
+                        <div class="daily-grade-value" style="background: ${gradeColor};">
+                            ${escapeHtml(g.grade)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            if (allGrades.length === 0) {
+                document.getElementById('avg-all').innerText = '-';
+                document.getElementById('subject-count').innerText = '0';
+                document.getElementById('top-grade').innerText = '-';
+                return;
+            }
+
+            const avgAll = (allGrades.reduce((sum, g) => sum + parseInt(g.grade || 0), 0) / allGrades.length).toFixed(2);
+            document.getElementById('avg-all').innerText = avgAll;
+
+            const subjects = new Set(allGrades.map(g => g.subject)).size;
+            document.getElementById('subject-count').innerText = subjects;
+
+            const topGrade = Math.max(...allGrades.map(g => parseInt(g.grade || 0)));
+            document.getElementById('top-grade').innerText = topGrade;
+
+            terms.forEach(term => {
+                const termGrades = allGrades.filter(g => (g.term || 'year') === term);
+                if (termGrades.length > 0) {
+                    const avg = (termGrades.reduce((sum, g) => sum + parseInt(g.grade || 0), 0) / termGrades.length).toFixed(2);
+                    document.getElementById(`avg-${term}`).innerText = `Орт: ${avg}`;
+                }
+            });
+        }
+
+        function switchTerm(event, term) {
+            document.querySelectorAll('.term-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.term-container').forEach(container => container.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`term-${term}`).classList.add('active');
+        }
+
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str).replace(/[&<>"'`]/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#39;', '`': '&#96;'
+            })[s]);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGrades);
+    </script>
+</body>
+</html>

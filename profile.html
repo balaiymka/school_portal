@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Жеке кабинет - Сарышаған мектебі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* ===== БАЗАЛЫҚ СТИЛЬДЕР ===== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f7f9;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            min-height: calc(100vh - 70px);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-user {
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+            border: 3px solid #3498db;
+        }
+
+        .sidebar-user h3 {
+            color: #1a2a44;
+            font-size: 16px;
+            margin: 10px 0 5px;
+        }
+
+        .sidebar-user p {
+            color: #7f8c8d;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .nav-item:hover {
+            background: #eef5ff;
+            color: #3498db;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .sidebar-excel-card {
+            padding: 15px;
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .sidebar-excel-card:hover {
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .sidebar-excel-card i {
+            font-size: 24px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .dashboard-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .content-header h2 {
+            color: #1a2a44;
+            font-size: 28px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .header-date {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .stat-card.blue {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .stat-card.green {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .stat-card.orange {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info span {
+            display: block;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-info h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-card i {
+            font-size: 32px;
+            opacity: 0.7;
+        }
+
+        .term-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;          /* ← 50px */
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f2f5;
+}
+
+        /* ===== MAIN GRID ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .content-card {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 30px;      /* ← ҚОСЫҢЫЗ */
+}
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+
+        .card-header h3 {
+            color: #1a2a44;
+            font-size: 16px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .card-header a {
+            color: #3498db;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ===== SCHEDULE LIST ===== */
+        .schedule-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .schedule-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-list li:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-list .time {
+            background: #eef5ff;
+            color: #3498db;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .schedule-list .subject {
+            flex: 1;
+            margin: 0 10px;
+            color: #1a2a44;
+            font-weight: 600;
+        }
+
+        .schedule-list .room {
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        /* ===== NOTICE ===== */
+        .notice-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eef5ff;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .notice-icon.green {
+            background: #e8f8f5;
+            color: #27ae60;
+        }
+
+        .notice-text {
+            flex: 1;
+        }
+
+        .notice-text strong {
+            display: block;
+            color: #1a2a44;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .notice-text p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        /* ===== GRADES ===== */
+        .grades-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .grades-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grades-list li:last-child {
+            border-bottom: none;
+        }
+
+        .muted {
+            color: #7f8c8d;
+            font-size: 11px;
+        }
+
+        /* ===== NOTIFICATIONS ===== */
+        #student-notifications-wrapper {
+            background: #f8fbff;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3498db;
+        }
+
+        #student-notifications-wrapper h4 {
+            color: #001f3f;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        #student-notifications-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #student-notifications-list li {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+            font-size: 12px;
+        }
+
+        /* ===== DAILY GRADES ===== */
+        #student-daily-grades {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #student-daily-grades li {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        #student-daily-grades span {
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* ===== МОБИЛЬДІ НҰСҚАСЫ ===== */
+        @media (max-width: 1024px) {
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                flex-direction: row;
+                gap: 15px;
+                align-items: flex-start;
+                padding: 15px;
+                flex-wrap: wrap;
+            }
+
+            .sidebar-user {
+                flex: 0 0 auto;
+            }
+
+            .user-avatar {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 10px;
+            }
+
+            .sidebar-user h3 {
+                font-size: 14px;
+            }
+
+            .sidebar-user p {
+                font-size: 11px;
+            }
+
+            .sidebar-nav {
+                flex-direction: row;
+                gap: 8px;
+                flex: 1;
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                padding: 8px 12px;
+                font-size: 11px;
+                flex: 0 0 auto;
+            }
+
+            .sidebar-excel-card {
+                padding: 12px;
+                font-size: 11px;
+                gap: 6px;
+            }
+
+            .sidebar-excel-card i {
+                font-size: 18px;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-wrapper {
+                padding: 12px;
+                gap: 15px;
+            }
+
+            .sidebar {
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .content-header h2 {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 15px;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .stat-info h3 {
+                font-size: 20px;
+            }
+
+            .stat-card i {
+                font-size: 24px;
+            }
+
+            .content-card {
+                padding: 15px;
+            }
+
+            .card-header h3 {
+                font-size: 14px;
+            }
+
+            .schedule-list li {
+                padding: 8px 0;
+                flex-wrap: wrap;
+            }
+
+            #student-notifications-wrapper {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .sidebar-user {
+                text-align: center;
+            }
+
+            .user-avatar {
+                width: 50px;
+                height: 50px;
+            }
+
+            .sidebar-nav {
+                flex-direction: column;
+                width: 100%;
+                gap: 6px;
+            }
+
+            .nav-item {
+                width: 100%;
+                font-size: 12px;
+            }
+
+            .content-header h2 {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .content-card {
+                padding: 12px;
+            }
+
+            .schedule-list li {
+                padding: 6px 0;
+                flex-direction: column;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light profile-page">
+
+    <header class="main-header">
+        <div class="container nav-container">
+            <div class="logo-section">
+                <img src="photo/logo.png" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/45'">
+                <span class="logo-text">"Сарышаған кентіндегі жалпы орта білім беретін мектеп" КММ</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="news.html">Жаңалықтар</a>
+                <a href="profile.html" class="active">Жеке кабинет</a>
+                <button class="btn-login-nav" id="logout-btn" onclick="logout()">Шығу</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-user">
+                <img src="photo/ava.png" alt="User" class="user-avatar" onerror="this.src='https://via.placeholder.com/100'">
+                <h3 id="sidebar-name">Балайым Жамауқұл</h3>
+                <p id="sidebar-role">11 "А" сынып оқушысы</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="profile.html" class="nav-item active">
+                    <i class="fas fa-th-large"></i> Басты панель
+                </a>
+                <a href="schedule.html" class="nav-item">
+                    <i class="fas fa-book-open"></i> Сабақ кестесі
+                </a>
+                <a href="grades.html" class="nav-item">
+    <i class="fas fa-graduation-cap"></i> Бағалар
+</a>
+                </a>
+                
+            </nav>
+
+            <div class="sidebar-excel-card" onclick="exportGradeToExcel()">
+                <i class="fas fa-file-excel"></i>
+                <span>Академиялық есеп (Excel)</span>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <h2 id="greeting">Қайырлы күн!</h2>
+                <div class="header-date" id="current-date"></div>
+            </header>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-info">
+                        <span>Орташа балл</span>
+                        <h3 id="avg-grade">4.5</h3>
+                    </div>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-info">
+                        <span>Сабаққа қатысу</span>
+                        <h3>98%</h3>
+                    </div>
+                    <i class="fas fa-user-check"></i>
+                </div>
+             <a href="homework.html" class="nav-item">
+    <i class="fas fa-book-open"></i> Үй тапсырмасы
+</a>
+            </div>
+
+            <!-- GRID -->
+            <div class="main-grid">
+                <!-- SCHEDULE -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Бүгінгі кесте</h3>
+                        <a href="schedule.html">Барлығы</a>
+                    </div>
+                    <ul class="schedule-list">
+                        <li>
+                            <span class="time">08:30</span>
+                            <span class="subject">Алгебра</span>
+                            <span class="room">204-кабинет</span>
+                        </li>
+                        <li>
+                            <span class="time">09:25</span>
+                            <span class="subject">Қазақ тілі</span>
+                            <span class="room">102-кабинет</span>
+                        </li>
+                        <li>
+                            <span class="time">10:20</span>
+                            <span class="subject">Физика</span>
+                            <span class="room">Лаборатория</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- NOTICES -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Хабарландырулар</h3>
+                    </div>
+                    <div class="notice-item">
+                        <div class="notice-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="notice-text">
+                            <strong>Ертең сенбілік!</strong>
+                            <p>Сағат 09:00-де мектеп ауласына жиналамыз.</p>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="notice-icon green"><i class="fas fa-trophy"></i></div>
+                        <div class="notice-text">
+                            <strong>Жетістік!</strong>
+                            <p>Сен математикадан облыстық кезеңге өттің.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JOURNAL -->
+                <div id="student-notifications-wrapper">
+                    <h4><i class="fas fa-book"></i> Ескертулер және журнал жазбалары</h4>
+                    <ul id="student-notifications-list">
+                        <li style="color: #999;">Жүктелуде...</li>
+                    </ul>
+                </div>
+
+                <!-- DAILY GRADES -->
+                <div style="background: #fff8f0; padding: 20px; border-radius: 12px; border-left: 4px solid #e67e22;">
+                    <h4 style="color: #e67e22; margin-bottom: 15px; margin-top: 0;"><i class="fas fa-award"></i> Құнды бағалар</h4>
+                    <ul id="student-daily-grades">
+                        <li style="color: #999;">Жүктелуде...</li>
+                    </ul>
+                </div>
+
+                <!-- GRADES BY TERM -->
+                <div id="grades-by-term"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Күнінің форматы
+        function updateDate() {
+            const today = new Date().toLocaleDateString('kk-KZ', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const elem = document.getElementById('current-date');
+            if (elem) elem.innerText = today;
+        }
+
+// ПРОФИЛДІ ЖҮКТЕУ
+async function loadProfile() {
+    try {
+        const token = localStorage.getItem('authToken');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+        if (!token || !currentUser.email) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // UI-ны жаңарту
+        const name = currentUser.name || 'Пайдаланушы';  // ← ТОЛЫҚ АТЫ
+        
+        document.getElementById('sidebar-name').innerText = name;
+        document.getElementById('sidebar-role').innerText = currentUser.class_name 
+            ? `${currentUser.class_name} сынып оқушысы` 
+            : 'Оқушы';
+        document.getElementById('greeting').innerText = `Қайырлы күн, ${name}!`;  // ← ІСІ ТОЛЫҚ
+
+        updateDate();
+
+        // ЖУРНАЛ ЖҮКТЕУ
+        await loadJournal(token, currentUser.email);
+
+        // БАҒАЛАРДЫ ЖҮКТЕУ
+        await loadGrades(token, currentUser.email);
+
+    } catch (err) {
+        console.error('Профиль жүктеу қатесі:', err);
+    }
+}
+
+        // ЖУРНАЛ ЖҮКТЕУ
+        async function loadJournal(token, studentEmail) {
+            try {
+                const response = await fetch('http://localhost:5001/api/journal', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) return;
+
+                const all = await response.json();
+                const myJournal = (all || [])
+                    .filter(x => x.student_email === studentEmail)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 5);
+
+                const list = document.getElementById('student-notifications-list');
+                if (!list) return;
+
+                if (myJournal.length === 0) {
+                    list.innerHTML = '<li style="color: #999;">Ескерту жоқ</li>';
+                } else {
+                    list.innerHTML = myJournal.map(j => `
+                        <li>
+                            <strong>${escapeHtml(j.note)}</strong>
+                            <br>
+                            <span style="font-size: 10px; color: #7f8c8d;">${new Date(j.date).toLocaleString('kk-KZ')}</span>
+                        </li>
+                    `).join('');
+                }
+            } catch (err) {
+                console.warn('Журнал жүктеу қатесі:', err);
+            }
+        }
+
+        // БАҒАЛАРДЫ ЖҮКТЕУ
+        async function loadGrades(token, studentEmail) {
+            try {
+                const response = await fetch('http://localhost:5001/api/grades', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) return;
+
+                const allGrades = await response.json();
+                const myGrades = (allGrades || []).filter(x => x.student_email === studentEmail);
+
+                // Бәрінен жоғары бағалар (4 және одан жоғары)
+                const topGrades = myGrades.filter(x => parseInt(x.grade) >= 4).slice(0, 5);
+                const dailyGradesList = document.getElementById('student-daily-grades');
+
+                if (topGrades.length === 0) {
+                    dailyGradesList.innerHTML = '<li style="color: #999;">Құнды бағалар әлі жоқ</li>';
+                } else {
+                    dailyGradesList.innerHTML = topGrades.map(g => `
+                        <li>
+                            <strong>${escapeHtml(g.subject)}</strong>
+                            <span style="background: ${parseInt(g.grade) >= 5 ? '#27ae60' : '#3498db'}">
+                                ${escapeHtml(g.grade)}
+                            </span>
+                        </li>
+                    `).join('');
+                }
+
+                // ОРТАША БАЛЛ
+                if (myGrades.length > 0) {
+                    const avg = (myGrades.reduce((sum, g) => sum + parseInt(g.grade || 0), 0) / myGrades.length).toFixed(2);
+                    document.getElementById('avg-grade').innerText = avg;
+                }
+
+                // ТОҚСАН БОЙЫНША БАҒАЛАР
+                const byTerm = { '1': [], '2': [], '3': [], '4': [], 'year': [] };
+                myGrades.forEach(g => {
+                    const term = g.term || 'year';
+                    if (byTerm[term]) byTerm[term].push(g);
+                });
+
+                let termHtml = '';
+                Object.keys(byTerm).forEach(term => {
+                    const grades = byTerm[term];
+                    if (grades.length === 0) return;
+
+                    const termName = term === 'year' ? 'Жылдық' : term + '-тоқсан';
+                    const avg = (grades.reduce((sum, g) => sum + parseInt(g.grade || 0), 0) / grades.length).toFixed(2);
+
+                    termHtml += `
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3>${termName} (Орт: ${avg})</h3>
+                            </div>
+                            <ul class="grades-list">
+                                ${grades.map(g => `
+                                    <li>
+                                        <strong>${escapeHtml(g.subject)}</strong>
+                                        <span style="background: ${parseInt(g.grade) >= 5 ? '#27ae60' : parseInt(g.grade) >= 4 ? '#3498db' : '#e67e22'}; color: white; padding: 4px 10px; border-radius: 15px;">
+                                            ${escapeHtml(g.grade)}
+                                        </span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                });
+
+                const container = document.getElementById('grades-by-term');
+                if (container) container.innerHTML = termHtml;
+
+            } catch (err) {
+                console.warn('Бағалар жүктеу қатесі:', err);
+            }
+        }
+
+        // HTML ЭКСКЕЙП
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str).replace(/[&<>"'`]/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#39;', '`': '&#96;'
+            })[s]);
+        }
+
+        // EXCEL ЭКСПОРТ
+        function exportGradeToExcel() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+                if (!token) {
+                    alert('Авторизациялаңыз');
+                    return;
+                }
+
+                fetch('http://localhost:5001/api/grades', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                }).then(r => r.json()).then(allGrades => {
+                    const myGrades = (allGrades || []).filter(x => x.student_email === currentUser.email);
+
+                    if (myGrades.length === 0) {
+                        alert('Бағалар табылмады');
+                        return;
+                    }
+
+                    const data = myGrades.map(g => ({
+                        'Пәні': g.subject,
+                        'Баға': g.grade,
+                        'Тоқсан': g.term || 'Жылдық'
+                    }));
+
+                    const ws = XLSX.utils.json_to_sheet(data);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Бағалар');
+                    XLSX.writeFile(wb, `${currentUser.name}_бағалар.xlsx`);
+
+                }).catch(err => {
+                    console.error('Excel экспорт қатесі:', err);
+                    alert('Excel экспорт сәтсіз');
+                });
+
+            } catch (err) {
+                console.error('Қате:', err);
+            }
+        }
+
+        // LOGOUT
+        function logout() {
+            if (confirm('Жүйеден шықтыңыз ба?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>
