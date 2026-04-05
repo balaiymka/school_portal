@@ -1,3 +1,4 @@
+HEAD
 # School Portal — Local development with Postgres, pgAdmin4 and VS Code
 
 This project is a small school portal frontend + Express backend. The server supports two modes:
@@ -119,7 +120,7 @@ You can run Postgres locally via Homebrew, your system package manager, or Docke
     - Option B — using `psql` CLI:
 
        ```bash
-       PGPASSWORD=your_db_password psql -h localhost -U postgres -d school_portal -f server/db/init.sql
+       PGPASSWORD=1234 psql -h localhost -U postgres -d school_portal -f server/db/init.sql
        ```
 
     - Or use pgAdmin4's Query Tool to run `server/db/init.sql`.
@@ -133,7 +134,7 @@ You can run Postgres locally via Homebrew, your system package manager, or Docke
 ## Connecting with pgAdmin4
 
 1. Open pgAdmin4 and create a new Server Registration.
-2. In the Connection tab set Host = `localhost`, Port = `5432`, Maintenance DB = `postgres` (or `school_portal`), Username = `postgres`, Password = the value you set.
+2. In the Connection tab set Host = `localhost`, Port = `5433`, Maintenance DB = `postgres` (or `school_portal`), Username = `postgres`, Password = the value you set.
 3. Save and expand the server; open Query Tool and run `SELECT * FROM users;` to inspect the seeded users.
 
 ## Connecting with VS Code
@@ -167,3 +168,6 @@ If you want, I can also add a small script to run `server/db/init.sql` via Node 
 1. **Manual Testing:** Chrome және Firefox браузерлерінде интерфейстің адаптивтілігі мен батырмалардың жұмысы тексерілді.
 2. **API Testing:** Postman құралы арқылы `/api/login` және `/api/users` эндпоинттері тексеріліп, 200 OK жауаптары алынды.
 3. **Validation Testing:** Логин формасындағы бос өрістер мен қате енгізілген деректерді өңдеу сценарийлері тексерілді.
+=======
+# school_portal
+ 57d7d52d29a4d91c4911763ef075765a45c96a28
