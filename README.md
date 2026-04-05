@@ -168,6 +168,5 @@ If you want, I can also add a small script to run `server/db/init.sql` via Node 
 1. **Manual Testing:** Chrome және Firefox браузерлерінде интерфейстің адаптивтілігі мен батырмалардың жұмысы тексерілді.
 2. **API Testing:** Postman құралы арқылы `/api/login` және `/api/users` эндпоинттері тексеріліп, 200 OK жауаптары алынды.
 3. **Validation Testing:** Логин формасындағы бос өрістер мен қате енгізілген деректерді өңдеу сценарийлері тексерілді.
-=======
 # school_portal
  57d7d52d29a4d91c4911763ef075765a45c96a28
