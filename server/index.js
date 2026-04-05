@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const path = require('path');
-require('dotenv').config();
+const { Pool } = require('pg');
 
 const app = express();
 
@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 
 // PostgreSQL Pool
-const { Pool } = require('pg');
 const pool = new Pool({
     host: process.env.PGHOST || 'localhost',
     port: process.env.PGPORT || 5433,
@@ -23,6 +22,8 @@ const pool = new Pool({
     password: process.env.PGPASSWORD || '1234',
     database: process.env.PGDATABASE || 'school_portal'
 });
+
+// ... (барлық қалған кодыңыз)
 
 pool.on('connect', () => {
     console.log('PostgreSQL коннекшн сәтті');
@@ -210,25 +211,25 @@ app.get('/api/teachers', async (req, res) => {
 
 // ============ ҮЙТАПСЫРМАЛАРЫ ============
 
+// 1. Тапсырма-ларды алу
 app.get('/api/homework', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM homework ORDER BY due_date');
+        const result = await pool.query('SELECT id, title, due_date FROM homework');
         res.json(result.rows);
-    } catch (err) {
-        res.status(500).json({ error: 'Сервер қатесі' });
+    } catch (e) {
+        console.error('homework GET error:', e);
+        res.status(500).json({ error: e.message });
     }
 });
 
-app.post('/api/homework', verifyToken, async (req, res) => {
+// 2. Бағалар-ды алу
+app.get('/api/grades', async (req, res) => {
     try {
-        const { title, description, due_date } = req.body;
-        const result = await pool.query(
-            'INSERT INTO homework (title, description, due_date) VALUES ($1, $2, $3) RETURNING *',
-            [title, description || '', due_date || null]
-        );
-        res.json(result.rows[0]);
-    } catch (err) {
-        res.status(500).json({ error: 'Сервер қатесі' });
+        const result = await pool.query('SELECT id, student_email, subject, grade FROM grades');
+        res.json(result.rows);
+    } catch (e) {
+        console.error('grades GET error:', e);
+        res.status(500).json({ error: e.message });
     }
 });
 
