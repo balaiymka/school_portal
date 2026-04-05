@@ -236,17 +236,17 @@ app.get('/api/grades', async (req, res) => {
 // ============ БАҒАЛАР ============
 
 // БАРЛЫҚ БАҒАЛАРДЫ АЛЫҢЫЗ (ФИЛЬТРЛЕУСІЗ)
-app.get('/api/grades', async (req, res) => {
-    try {
-        const result = await pool.query(
-            'SELECT * FROM grades ORDER BY created_at DESC'
-        );
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Get grades error:', err);
-        res.status(500).json({ error: 'Бағаларды жүктеу сәтсіз' });
-    }
-});
+// app.get('/api/grades', async (req, res) => {
+//     try {
+//         const result = await pool.query(
+//             'SELECT * FROM grades ORDER BY created_at DESC'
+//         );
+//         res.json(result.rows);
+//     } catch (err) {
+//         console.error('Get grades error:', err);
+//         res.status(500).json({ error: 'Бағаларды жүктеу сәтсіз' });
+//     }
+// });
 
 // БАҒА ҚОСУ (МҰҒАЛІМ)
 app.post('/api/grades', verifyToken, verifyTeacher, async (req, res) => {
